@@ -51,7 +51,7 @@ export async function POST(req: NextRequest){
         await newUser.save()
 
         // Send verification email
-        await sendVerificationEmail(email, verificationCode, userName)
+        await sendVerificationEmail(email, verificationCode, userName, "signup")
 
         return NextResponse.json(
             { message: "Verification email sent" },
@@ -65,3 +65,88 @@ export async function POST(req: NextRequest){
           )
     }
 }
+
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - password
+ *               - termsAndConditions
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 description: The user's first name
+ *               lastName:
+ *                 type: string
+ *                 description: The user's last name
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The user's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The user's password
+ *               marketingConsent:
+ *                 type: boolean
+ *                 description: Whether the user consents to marketing emails
+ *               termsAndConditions:
+ *                 type: boolean
+ *                 description: Whether the user agrees to the terms and conditions
+ *               role:
+ *                 type: string
+ *                 description: The user's role (optional, default is "user")
+ *     responses:
+ *       200:
+ *         description: Verification email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Verification email sent
+ *       400:
+ *         description: Bad Request - Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing required fields
+ *       409:
+ *         description: Conflict - User already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User already exists
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
