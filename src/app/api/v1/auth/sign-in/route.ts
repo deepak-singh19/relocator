@@ -52,11 +52,20 @@ export async function POST(req: NextRequest){
             { expiresIn: rememberMe ? "7d" : "1d" }
         )
 
-        return NextResponse.json(
-            { message: "Sign in successful", token: jwtToken },
+        const response=  NextResponse.json(
+            { message: "Verification successful", token: jwtToken },
             { status: 200 }
-          )
+        );
 
+        // Set the JWT token as a cookie
+        response.cookies.set("token", jwtToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: rememberMe ? 7 * 24 * 60 * 60 : 60 * 60, // 7 days or 1 hour
+            path: "/",
+        })
+
+        return response
     }catch(error){
         return NextResponse.json({message: "Internal Server Error", error:error},{status:500},)
     }

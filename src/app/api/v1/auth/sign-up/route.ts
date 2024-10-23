@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { User } from "@/lib/database/models/user.model";
 import { connectDb } from "@/lib/database/connectDb";
 import { sendVerificationEmail, generateVerificationCode } from "@/lib/helper/common";
